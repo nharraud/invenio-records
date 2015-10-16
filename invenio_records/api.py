@@ -81,11 +81,10 @@ class Record(dict):
             if record.get('recid') is not None:
                 metadata['id'] = record.get('recid')
 
-            record = RecordMetadata(**metadata)
-            db.session.add(record)
-
-        after_record_insert.send(record)
-        return record
+            record_metadata = RecordMetadata(**metadata)
+            db.session.add(record_metadata)
+        after_record_insert.send(record_metadata)
+        return cls(record_metadata.json, model=record_metadata)
 
     def patch(self, patch):
         model = self.model
